@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Barter Exchange — Trade services & items</title>
+  <title>Barter Exchange — Trade services, items & house swaps</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -13,15 +13,16 @@
         <div class="logo" aria-hidden="true">BX</div>
         <div class="brand-text">
           <div class="brand-name">Barter Exchange</div>
-          <div class="brand-tag">Trade services & items — no cash required</div>
+          <div class="brand-tag">Trade services, items, and house swaps — no cash required</div>
         </div>
       </div>
 
       <nav class="nav">
         <a href="#how">How it works</a>
         <a href="#market">Marketplace</a>
-        <a href="#post">Post a listing</a>
-        <a href="#faq">FAQ</a>
+        <a href="#post">Post</a>
+        <a href="#value">Value Match</a>
+        <a href="#rules">Rules</a>
       </nav>
     </div>
   </header>
@@ -30,11 +31,11 @@
     <section class="hero">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <h1>Barter skills and items with people nearby.</h1>
+          <h1>Swap skills and items with people nearby — safely and fairly.</h1>
           <p class="subhead">
-            Offer services like mowing lawns, TV installation, painting, roof cleaning, moving help,
-            tutoring, and more — or trade items of equal or greater value. Make offers, negotiate,
-            and complete the exchange.
+            Barter Exchange lets you barter services like mowing the lawn, TV installation, painting,
+            roof cleaning, moving help, tech help — and trade items of equal or greater value.
+            You can also list house swaps for a set duration (1–5 weeks, etc.).
           </p>
 
           <div class="cta-row">
@@ -48,24 +49,23 @@
 
           <div class="trust">
             <div class="pill">✅ Services barter</div>
-            <div class="pill">✅ Items trading</div>
-            <div class="pill">✅ Value matching</div>
-            <div class="pill">✅ Offer + negotiate</div>
+            <div class="pill">✅ Items trade</div>
+            <div class="pill">✅ House swaps</div>
+            <div class="pill">✅ Equal-or-greater value</div>
           </div>
         </div>
 
         <div class="hero-card">
-          <div class="card-title">Popular trade categories</div>
+          <div class="card-title">What makes it unique</div>
           <ul class="checklist">
-            <li>Home services (mowing, painting, cleaning, roof)</li>
-            <li>Handyman (TV mount, furniture assembly)</li>
-            <li>Moving help & delivery</li>
-            <li>Tech help (setup Wi-Fi, fix laptop)</li>
-            <li>Items: electronics, furniture, tools, collectibles</li>
+            <li><strong>Value Match Calculator</strong> (equal-or-greater trade rule)</li>
+            <li><strong>Bundle Builder</strong> (combine items + service hours)</li>
+            <li><strong>House swaps</strong> with duration + rules checklist</li>
+            <li>Offer flow with accept/decline logic (demo)</li>
           </ul>
           <div class="note">
-            <strong>Note:</strong> This is a front-end demo. In production you’d add accounts, messaging,
-            location radius, and fraud/safety checks.
+            <strong>Note:</strong> This site is a front-end demo that runs locally in your browser.
+            Real app features (accounts, chat, verification) require a backend.
           </div>
         </div>
       </div>
@@ -75,7 +75,7 @@
       <div class="container">
         <div class="section-head">
           <h2>How it works</h2>
-          <p>Simple steps to trade services or items.</p>
+          <p>Post a listing → receive offers → trade safely.</p>
         </div>
 
         <div class="steps">
@@ -83,28 +83,28 @@
             <div class="step-num">1</div>
             <div class="step-body">
               <h3>Create a listing</h3>
-              <p>Offer a service or an item. Set what you want in exchange.</p>
+              <p>Offer a service, item, or house swap with a duration.</p>
             </div>
           </div>
           <div class="step">
             <div class="step-num">2</div>
             <div class="step-body">
-              <h3>Match by value</h3>
-              <p>Trade items of equal or greater value, or swap service hours.</p>
+              <h3>Set what you want</h3>
+              <p>Request an item, service hours, or a bundle of both.</p>
             </div>
           </div>
           <div class="step">
             <div class="step-num">3</div>
             <div class="step-body">
-              <h3>Send an offer</h3>
-              <p>Offer an item, service hours, or a bundle that meets the value.</p>
+              <h3>Compare value</h3>
+              <p>Use the Value Match Calculator for fair trades.</p>
             </div>
           </div>
           <div class="step">
             <div class="step-num">4</div>
             <div class="step-body">
               <h3>Complete safely</h3>
-              <p>Meet in a safe location or confirm the service completion.</p>
+              <p>Meet in public, document trade terms, confirm completion.</p>
             </div>
           </div>
         </div>
@@ -115,7 +115,7 @@
       <div class="container">
         <div class="section-head">
           <h2>Marketplace</h2>
-          <p>Browse demo listings and filter by type and category.</p>
+          <p>Browse demo listings. Click one to make an offer.</p>
         </div>
 
         <div class="market-toolbar">
@@ -124,8 +124,10 @@
               Type:
               <select id="typeFilter">
                 <option value="all">All</option>
-                <option value="service">Services</option>
-                <option value="item">Items</option>
+                <option value="service">Service</option>
+                <option value="item">Item</option>
+                <option value="house">House Swap</option>
+                <option value="platonic">Companionship (platonic)</option>
               </select>
             </label>
 
@@ -135,9 +137,12 @@
                 <option value="all">All categories</option>
                 <option value="home">Home Services</option>
                 <option value="handyman">Handyman</option>
+                <option value="cleaning">Cleaning</option>
                 <option value="moving">Moving Help</option>
                 <option value="tech">Tech Help</option>
                 <option value="items">Items</option>
+                <option value="housing">Housing</option>
+                <option value="community">Community</option>
               </select>
             </label>
 
@@ -152,16 +157,14 @@
           </div>
 
           <div class="search">
-            <input id="searchInput" placeholder="Search listings (e.g., mowing, TV install, roof, iPhone)"/>
+            <input id="searchInput" placeholder="Search (mowing, TV install, roof, couch, house swap)" />
           </div>
         </div>
 
-        <div id="listingsGrid" class="results-grid">
-          <!-- JS renders cards here -->
-        </div>
+        <div id="listingsGrid" class="results-grid"></div>
 
         <div class="callout">
-          <strong>Tip:</strong> In the real app, users would message, negotiate, and confirm the trade securely.
+          <strong>Reminder:</strong> Barter Exchange is for legal trades only. “Companionship” here is strictly platonic.
         </div>
       </div>
     </section>
@@ -170,7 +173,7 @@
       <div class="container">
         <div class="section-head">
           <h2>Post a listing</h2>
-          <p>Create a demo listing (saved locally in your browser).</p>
+          <p>Create a demo listing (stored locally in your browser).</p>
         </div>
 
         <div class="workspace">
@@ -180,52 +183,63 @@
             <div class="form">
               <label class="label">Listing type</label>
               <div class="radio-row">
-                <label class="radio">
-                  <input type="radio" name="listingType" value="service" checked />
-                  <span>Service</span>
-                </label>
-                <label class="radio">
-                  <input type="radio" name="listingType" value="item" />
-                  <span>Item</span>
-                </label>
+                <label class="radio"><input type="radio" name="listingType" value="service" checked /><span>Service</span></label>
+                <label class="radio"><input type="radio" name="listingType" value="item" /><span>Item</span></label>
+                <label class="radio"><input type="radio" name="listingType" value="house" /><span>House Swap</span></label>
+                <label class="radio"><input type="radio" name="listingType" value="platonic" /><span>Companionship (platonic)</span></label>
               </div>
 
               <label class="label">Title</label>
-              <input id="titleInput" placeholder="Example: Lawn mowing for 1 hour" />
+              <input id="titleInput" placeholder="Example: Lawn mowing (1 hour) / Tool set / House swap (2 weeks)" />
 
               <label class="label">Category</label>
               <select id="categoryInput">
                 <option value="home">Home Services</option>
                 <option value="handyman">Handyman</option>
+                <option value="cleaning">Cleaning</option>
                 <option value="moving">Moving Help</option>
                 <option value="tech">Tech Help</option>
                 <option value="items">Items</option>
+                <option value="housing">Housing</option>
+                <option value="community">Community</option>
               </select>
 
+              <div id="durationWrap" class="hidden">
+                <label class="label">House swap duration</label>
+                <select id="durationInput">
+                  <option value="1 week">1 week</option>
+                  <option value="2 weeks">2 weeks</option>
+                  <option value="3 weeks">3 weeks</option>
+                  <option value="4 weeks">4 weeks</option>
+                  <option value="5 weeks">5 weeks</option>
+                  <option value="Custom">Custom</option>
+                </select>
+                <input id="durationCustom" class="hidden" placeholder="Enter custom duration (e.g., 10 days)" />
+              </div>
+
               <label class="label">Estimated value (USD)</label>
-              <input id="valueInput" type="number" min="1" step="1" placeholder="Example: 50" />
+              <input id="valueInput" type="number" min="1" step="1" placeholder="Example: 120" />
 
               <label class="label">What do you want in exchange?</label>
-              <input id="wantInput" placeholder="Example: TV mount help, tools, electronics, equal value item" />
+              <input id="wantInput" placeholder="Example: TV install help, equal value item, service hours bundle" />
 
               <label class="label">Details</label>
-              <textarea id="detailsInput" rows="5" placeholder="Describe the work/item, condition, time needed, and trade preferences."></textarea>
+              <textarea id="detailsInput" rows="5" placeholder="Describe your offer, requirements, location area, and rules."></textarea>
 
               <div class="control-row">
                 <button id="postBtn" class="btn primary">Post listing</button>
                 <button id="resetBtn" class="btn">Reset</button>
               </div>
 
-              <div class="tiny" id="postStatus">Your listing will appear in Marketplace above.</div>
+              <div class="tiny" id="postStatus">Your listing will appear in the Marketplace.</div>
             </div>
           </div>
 
           <div class="panel">
             <div class="panel-title">Make an offer (demo)</div>
+
             <div class="offer-box">
-              <div class="tiny muted">
-                Select any listing in the marketplace to “make an offer”.
-              </div>
+              <div class="tiny muted">Select a listing in Marketplace to load it here.</div>
 
               <div class="offer-target" id="offerTarget">
                 <div class="offer-title muted">No listing selected</div>
@@ -234,8 +248,8 @@
 
               <div class="divider"></div>
 
-              <label class="label">Your offer</label>
-              <input id="offerInput" placeholder="Example: I’ll trade 2 hours painting + $120 tool set" />
+              <label class="label">Your offer (describe bundle)</label>
+              <input id="offerInput" placeholder="Example: 2 hours painting + tool set" />
 
               <label class="label">Offer value estimate (USD)</label>
               <input id="offerValueInput" type="number" min="1" step="1" placeholder="Example: 150" />
@@ -251,37 +265,110 @@
             </div>
 
             <div class="fineprint">
-              Demo logic: offers are “accepted” when offer value is equal or higher than listing value.
+              Demo logic: offers are “Accepted” when your offer value is equal or higher than listing value.
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="faq" class="section">
+    <section id="value" class="section">
       <div class="container">
         <div class="section-head">
-          <h2>FAQ</h2>
-          <p>Common questions about bartering and safety.</p>
+          <h2>Value Match Calculator</h2>
+          <p>Quickly check if a trade meets the equal-or-greater value rule.</p>
         </div>
 
-        <div class="faq">
-          <details>
-            <summary>What can I barter?</summary>
-            <p>Anything legal: services (mowing, cleaning, painting, handyman), and items (tools, furniture, electronics, etc.).</p>
-          </details>
-          <details>
-            <summary>How do you decide “equal value”?</summary>
-            <p>Users estimate value. A real app could use price suggestions, receipts, and community ratings to improve fairness.</p>
-          </details>
-          <details>
-            <summary>How do I stay safe?</summary>
-            <p>Meet in public places, verify profiles, use in-app messaging, and consider identity verification for high-value trades.</p>
-          </details>
-          <details>
-            <summary>Can I barter service hours?</summary>
-            <p>Yes. You can list service hours or bundle services + items to meet the value.</p>
-          </details>
+        <div class="value-grid">
+          <div class="panel">
+            <div class="panel-title">Trade value inputs</div>
+
+            <label class="label">Target listing value (USD)</label>
+            <input id="targetValue" type="number" min="1" step="1" placeholder="Example: 120" />
+
+            <label class="label">Your offer value (USD)</label>
+            <input id="offerValue" type="number" min="1" step="1" placeholder="Example: 150" />
+
+            <div class="control-row">
+              <button id="calcBtn" class="btn primary">Check match</button>
+              <button id="fillExampleBtn" class="btn">Fill example</button>
+            </div>
+
+            <div class="callout" id="calcResult">
+              <strong>Result:</strong> Enter values and click “Check match”.
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">Bundle Builder (optional)</div>
+            <p class="tiny muted">
+              Use this to estimate bundles like “3 service hours + item value”.
+            </p>
+
+            <label class="label">Service hours</label>
+            <input id="hoursInput" type="number" min="0" step="0.5" placeholder="Example: 2" />
+
+            <label class="label">Estimated $ per hour</label>
+            <input id="rateInput" type="number" min="0" step="1" placeholder="Example: 40" />
+
+            <label class="label">Item value add-on (USD)</label>
+            <input id="itemAddInput" type="number" min="0" step="1" placeholder="Example: 70" />
+
+            <div class="control-row">
+              <button id="bundleBtn" class="btn primary">Estimate bundle value</button>
+              <button id="bundleToOfferBtn" class="btn" disabled>Use in offer</button>
+            </div>
+
+            <div class="callout" id="bundleResult">
+              <strong>Bundle:</strong> Enter values to estimate.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="rules" class="section section-alt">
+      <div class="container">
+        <div class="section-head">
+          <h2>Rules & safety</h2>
+          <p>Build trust and keep the platform clean.</p>
+        </div>
+
+        <div class="rules-grid">
+          <div class="rule-card">
+            <h3>Allowed</h3>
+            <ul>
+              <li>Legal services and items</li>
+              <li>Clear value expectations</li>
+              <li>House swaps with written rules</li>
+              <li>Platonic companionship only (community activities)</li>
+            </ul>
+          </div>
+
+          <div class="rule-card">
+            <h3>Not allowed</h3>
+            <ul>
+              <li>Sexual services or escorting</li>
+              <li>Adult content listings</li>
+              <li>Illegal goods or unsafe offers</li>
+              <li>Harassment, coercion, or exploitation</li>
+            </ul>
+          </div>
+
+          <div class="rule-card">
+            <h3>Safety tips</h3>
+            <ul>
+              <li>Meet in public places for item trades</li>
+              <li>Use ID verification for high value trades</li>
+              <li>Document the agreement (simple checklist)</li>
+              <li>For house swaps: deposits, photos, rules, and dates</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>House swap note:</strong> Real house swaps should include identity verification, contracts, insurance checks,
+          and clear cancellation/refund rules.
         </div>
       </div>
     </section>
@@ -296,7 +383,8 @@
           <a href="#how">How it works</a>
           <a href="#market">Marketplace</a>
           <a href="#post">Post</a>
-          <a href="#faq">FAQ</a>
+          <a href="#value">Value Match</a>
+          <a href="#rules">Rules</a>
         </div>
       </div>
     </footer>

@@ -1,270 +1,172 @@
-const tabs = document.querySelectorAll(".tab");
-const serviceForm = document.getElementById("serviceForm");
-const itemForm = document.getElementById("itemForm");
-
-const postServiceBtn = document.getElementById("postServiceBtn");
-const postItemBtn = document.getElementById("postItemBtn");
-
-const postSvcMsg = document.getElementById("postSvcMsg");
-const postItemMsg = document.getElementById("postItemMsg");
-
 const listingsGrid = document.getElementById("listingsGrid");
-const viewFilter = document.getElementById("viewFilter");
+const typeFilter = document.getElementById("typeFilter");
+const categoryFilter = document.getElementById("categoryFilter");
 const sortFilter = document.getElementById("sortFilter");
+const searchInput = document.getElementById("searchInput");
 
-const selectedListingEl = document.getElementById("selectedListing");
-const proposalHint = document.getElementById("proposalHint");
+const postBtn = document.getElementById("postBtn");
+const resetBtn = document.getElementById("resetBtn");
+const postStatus = document.getElementById("postStatus");
 
-const offerType = document.getElementById("offerType");
-const offerTitle = document.getElementById("offerTitle");
+const titleInput = document.getElementById("titleInput");
+const categoryInput = document.getElementById("categoryInput");
+const valueInput = document.getElementById("valueInput");
+const wantInput = document.getElementById("wantInput");
+const detailsInput = document.getElementById("detailsInput");
+
+const durationWrap = document.getElementById("durationWrap");
+const durationInput = document.getElementById("durationInput");
+const durationCustom = document.getElementById("durationCustom");
+
+const offerTarget = document.getElementById("offerTarget");
+const offerInput = document.getElementById("offerInput");
+const offerValueInput = document.getElementById("offerValueInput");
+const sendOfferBtn = document.getElementById("sendOfferBtn");
+const clearOfferBtn = document.getElementById("clearOfferBtn");
+const offerResult = document.getElementById("offerResult");
+
+const targetValue = document.getElementById("targetValue");
 const offerValue = document.getElementById("offerValue");
-const offerLocation = document.getElementById("offerLocation");
-const offerMsg = document.getElementById("offerMsg");
-const sendProposalBtn = document.getElementById("sendProposalBtn");
-const proposalMsg = document.getElementById("proposalMsg");
+const calcBtn = document.getElementById("calcBtn");
+const fillExampleBtn = document.getElementById("fillExampleBtn");
+const calcResult = document.getElementById("calcResult");
 
-let listings = seedListings();
-let selectedId = null;
+const hoursInput = document.getElementById("hoursInput");
+const rateInput = document.getElementById("rateInput");
+const itemAddInput = document.getElementById("itemAddInput");
+const bundleBtn = document.getElementById("bundleBtn");
+const bundleToOfferBtn = document.getElementById("bundleToOfferBtn");
+const bundleResult = document.getElementById("bundleResult");
 
-function seedListings(){
-  const now = Date.now();
-  return [
-    {
-      id: cryptoId(),
-      type: "service",
-      title: "Mow lawn (front + back)",
-      category: "Yard Work",
-      desc: "I’ll mow and edge. You provide bags if needed.",
-      value: 60,
-      location: "Phoenix",
-      createdAt: now - 1000 * 60 * 25
-    },
-    {
-      id: cryptoId(),
-      type: "service",
-      title: "Install TV mount + basic setup",
-      category: "Home Install",
-      desc: "Mount TV to wall (you provide mount). Includes cable tidy.",
-      value: 90,
-      location: "Phoenix",
-      createdAt: now - 1000 * 60 * 40
-    },
-    {
-      id: cryptoId(),
-      type: "item",
-      title: "Pressure washer (good condition)",
-      category: "Tools",
-      desc: "Works great. Looking to trade for roof cleaning or yard work.",
-      value: 140,
-      location: "Phoenix",
-      createdAt: now - 1000 * 60 * 55
-    }
-  ];
+let selectedListingId = null;
+let lastBundleValue = null;
+
+function getListingType() {
+  const checked = document.querySelector('input[name="listingType"]:checked');
+  return checked ? checked.value : "service";
 }
 
-function cryptoId(){
-  return Math.random().toString(16).slice(2) + "-" + Math.random().toString(16).slice(2);
+function nowId() {
+  return String(Date.now()) + String(Math.floor(Math.random()*1000));
 }
 
-tabs.forEach(t => {
-  t.addEventListener("click", () => {
-    tabs.forEach(x => x.classList.remove("active"));
-    t.classList.add("active");
-
-    const tab = t.dataset.tab;
-    if (tab === "service"){
-      serviceForm.classList.remove("hidden");
-      itemForm.classList.add("hidden");
-    } else {
-      itemForm.classList.remove("hidden");
-      serviceForm.classList.add("hidden");
-    }
-  });
-});
-
-postServiceBtn.addEventListener("click", () => {
-  const title = document.getElementById("svcTitle").value.trim();
-  const category = document.getElementById("svcCategory").value;
-  const desc = document.getElementById("svcDesc").value.trim();
-  const value = Number(document.getElementById("svcValue").value);
-  const location = document.getElementById("svcLocation").value.trim();
-
-  if (!title || !desc || !value || value <= 0 || !location){
-    postSvcMsg.textContent = "Please fill out title, description, value, and location.";
-    return;
+function loadUserListings() {
+  try {
+    const raw = localStorage.getItem("bx_listings_v2");
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
   }
+}
 
-  listings.unshift({
-    id: cryptoId(),
+function saveUserListings(list) {
+  localStorage.setItem("bx_listings_v2", JSON.stringify(list));
+}
+
+const demoListings = [
+  {
+    id: "d1",
     type: "service",
-    title, category, desc, value: Math.floor(value), location,
-    createdAt: Date.now()
-  });
-
-  postSvcMsg.textContent = "Service posted!";
-  clearServiceInputs();
-  render();
-});
-
-postItemBtn.addEventListener("click", () => {
-  const title = document.getElementById("itemTitle").value.trim();
-  const category = document.getElementById("itemCategory").value;
-  const desc = document.getElementById("itemDesc").value.trim();
-  const value = Number(document.getElementById("itemValue").value);
-  const location = document.getElementById("itemLocation").value.trim();
-
-  if (!title || !desc || !value || value <= 0 || !location){
-    postItemMsg.textContent = "Please fill out title, description, value, and location.";
-    return;
-  }
-
-  listings.unshift({
-    id: cryptoId(),
+    category: "home",
+    title: "Lawn mowing (front + backyard)",
+    value: 45,
+    want: "Trade for TV installation help or equal value item",
+    details: "45–60 minutes. Bring your mower or use mine.",
+    location: "Local",
+    postedAt: Date.now() - 1000*60*60*10
+  },
+  {
+    id: "d2",
+    type: "service",
+    category: "handyman",
+    title: "TV mount installation (standard wall)",
+    value: 120,
+    want: "Trade for cleaning service, tools, or equal value item",
+    details: "Includes leveling + basic setup. Mount not included.",
+    location: "Local",
+    postedAt: Date.now() - 1000*60*60*22
+  },
+  {
+    id: "d3",
+    type: "service",
+    category: "cleaning",
+    title: "Roof / gutter cleaning (small home)",
+    value: 160,
+    want: "Trade for painting help or high-value item",
+    details: "Safety-first. Weather dependent. Ladder required.",
+    location: "Local",
+    postedAt: Date.now() - 1000*60*60*30
+  },
+  {
+    id: "d4",
     type: "item",
-    title, category, desc, value: Math.floor(value), location,
-    createdAt: Date.now()
-  });
+    category: "items",
+    title: "Tool set (new) — 100+ pieces",
+    value: 85,
+    want: "Trade for 2 hours of painting or similar value item",
+    details: "Sealed box. Great for DIY.",
+    location: "Local",
+    postedAt: Date.now() - 1000*60*60*12
+  },
+  {
+    id: "d5",
+    type: "house",
+    category: "housing",
+    title: "House swap — 2 weeks (private room + kitchen access)",
+    value: 600,
+    want: "Swap with similar space or service+item bundle",
+    details: "Duration flexible. Requires ID + rules checklist + deposit (production feature).",
+    duration: "2 weeks",
+    location: "Local",
+    postedAt: Date.now() - 1000*60*60*8
+  },
+  {
+    id: "d6",
+    type: "platonic",
+    category: "community",
+    title: "Museum buddy (platonic) — 2 hours",
+    value: 30,
+    want: "Trade for a small item or service help (platonic only)",
+    details: "Strictly platonic companionship. No adult content or romantic services.",
+    location: "Local",
+    postedAt: Date.now() - 1000*60*60*16
+  }
+];
 
-  postItemMsg.textContent = "Item posted!";
-  clearItemInputs();
-  render();
-});
-
-function clearServiceInputs(){
-  document.getElementById("svcTitle").value = "";
-  document.getElementById("svcDesc").value = "";
-  document.getElementById("svcValue").value = "";
-  document.getElementById("svcLocation").value = "";
+function allListings() {
+  return [...loadUserListings(), ...demoListings];
 }
 
-function clearItemInputs(){
-  document.getElementById("itemTitle").value = "";
-  document.getElementById("itemDesc").value = "";
-  document.getElementById("itemValue").value = "";
-  document.getElementById("itemLocation").value = "";
+function labelType(t) {
+  if (t === "service") return "Service";
+  if (t === "item") return "Item";
+  if (t === "house") return "House Swap";
+  if (t === "platonic") return "Platonic";
+  return "Listing";
 }
 
-viewFilter.addEventListener("change", render);
-sortFilter.addEventListener("change", render);
-
-function filteredAndSorted(){
-  let out = [...listings];
-
-  const view = viewFilter.value;
-  if (view !== "all") out = out.filter(x => x.type === view);
-
-  const sort = sortFilter.value;
-  if (sort === "newest") out.sort((a,b) => b.createdAt - a.createdAt);
-  if (sort === "valueLow") out.sort((a,b) => a.value - b.value);
-  if (sort === "valueHigh") out.sort((a,b) => b.value - a.value);
-
-  return out;
+function labelCat(c) {
+  return ({
+    home: "Home Services",
+    handyman: "Handyman",
+    cleaning: "Cleaning",
+    moving: "Moving Help",
+    tech: "Tech Help",
+    items: "Items",
+    housing: "Housing",
+    community: "Community"
+  }[c] || "Other");
 }
 
-function render(){
-  const list = filteredAndSorted();
-
-  if (list.length === 0){
-    listingsGrid.innerHTML = `<div class="empty">No listings match your filter.</div>`;
-    return;
-  }
-
-  listingsGrid.innerHTML = "";
-  for (const l of list){
-    const div = document.createElement("div");
-    div.className = "listing";
-
-    const typeBadge = l.type === "service" ? "Service" : "Item";
-    const selectedBadge = (l.id === selectedId) ? `<span class="badge">Selected</span>` : "";
-
-    div.innerHTML = `
-      <div class="listing-top">
-        <div>
-          <h4>${escapeHtml(l.title)}</h4>
-          <div class="badges">
-            <span class="badge">${typeBadge}</span>
-            <span class="badge">${escapeHtml(l.category)}</span>
-            <span class="badge">$${Number(l.value).toFixed(0)} value</span>
-            <span class="badge">${escapeHtml(l.location)}</span>
-            ${selectedBadge}
-          </div>
-        </div>
-        <button class="btn" data-select="${l.id}">Select</button>
-      </div>
-      <p>${escapeHtml(l.desc)}</p>
-      <div class="actions">
-        <button class="btn primary" data-propose="${l.id}">Propose a trade</button>
-      </div>
-    `;
-
-    listingsGrid.appendChild(div);
-  }
-
-  document.querySelectorAll("[data-select]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      selectedId = btn.dataset.select;
-      syncSelected();
-      render();
-    });
-  });
-
-  document.querySelectorAll("[data-propose]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      selectedId = btn.dataset.propose;
-      syncSelected();
-      render();
-      document.getElementById("offerTitle").focus();
-    });
-  });
+function formatTimeAgo(ts) {
+  const diff = Date.now() - ts;
+  const hours = Math.max(1, Math.floor(diff / (1000*60*60)));
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
 }
 
-function syncSelected(){
-  const listing = listings.find(x => x.id === selectedId);
-
-  if (!listing){
-    selectedListingEl.textContent = "None selected.";
-    proposalHint.textContent = "Select a listing to propose a trade.";
-    sendProposalBtn.disabled = true;
-    return;
-  }
-
-  selectedListingEl.innerHTML = `
-    <div><strong>${escapeHtml(listing.title)}</strong></div>
-    <div class="muted">${listing.type === "service" ? "Service" : "Item"} • ${escapeHtml(listing.category)} • $${listing.value} • ${escapeHtml(listing.location)}</div>
-    <div class="muted">${escapeHtml(listing.desc)}</div>
-  `;
-
-  proposalHint.textContent = "Fill your offer details and send a proposal.";
-  sendProposalBtn.disabled = false;
-  proposalMsg.textContent = "";
-}
-
-sendProposalBtn.addEventListener("click", () => {
-  const listing = listings.find(x => x.id === selectedId);
-  if (!listing) return;
-
-  const myType = offerType.value;
-  const myTitle = offerTitle.value.trim();
-  const myValue = Number(offerValue.value);
-  const myLoc = offerLocation.value.trim();
-  const myMsg = offerMsg.value.trim();
-
-  if (!myTitle || !myValue || myValue <= 0 || !myLoc || !myMsg){
-    proposalMsg.textContent = "Please fill offer title, value, location, and message.";
-    return;
-  }
-
-  // Fairness rule: if trading for an ITEM listing, require equal-or-greater value
-  if (listing.type === "item" && myType === "item" && myValue < listing.value){
-    proposalMsg.textContent = `Your item value ($${Math.floor(myValue)}) must be equal or greater than the listed item value ($${listing.value}).`;
-    return;
-  }
-
-  proposalMsg.textContent = "Proposal sent (demo). In production, this would open secure messaging.";
-  offerMsg.value = "";
-});
-
-function escapeHtml(str){
+function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, s => ({
     "&":"&amp;",
     "<":"&lt;",
@@ -274,5 +176,267 @@ function escapeHtml(str){
   }[s]));
 }
 
-render();
-syncSelected();
+function applyFilters(list) {
+  const type = typeFilter.value;
+  const cat = categoryFilter.value;
+  const q = searchInput.value.trim().toLowerCase();
+
+  let out = list;
+
+  if (type !== "all") out = out.filter(x => x.type === type);
+  if (cat !== "all") out = out.filter(x => x.category === cat);
+
+  if (q) {
+    out = out.filter(x =>
+      (x.title || "").toLowerCase().includes(q) ||
+      (x.want || "").toLowerCase().includes(q) ||
+      (x.details || "").toLowerCase().includes(q) ||
+      (x.duration || "").toLowerCase().includes(q)
+    );
+  }
+
+  const sort = sortFilter.value;
+  if (sort === "newest") out = out.sort((a,b) => b.postedAt - a.postedAt);
+  if (sort === "valueHigh") out = out.sort((a,b) => b.value - a.value);
+  if (sort === "valueLow") out = out.sort((a,b) => a.value - b.value);
+
+  return out;
+}
+
+function renderListings() {
+  const list = applyFilters(allListings());
+  listingsGrid.innerHTML = "";
+
+  if (list.length === 0) {
+    listingsGrid.innerHTML = `<div class="callout"><strong>No results:</strong> Try different filters or search terms.</div>`;
+    return;
+  }
+
+  list.forEach(item => {
+    const selected = item.id === selectedListingId;
+    const durationLine = item.type === "house" && item.duration ? ` • Duration: ${escapeHtml(item.duration)}` : "";
+
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.id = item.id;
+
+    card.innerHTML = `
+      <div style="font-weight:900; display:flex; justify-content:space-between; gap:10px;">
+        <span>${escapeHtml(item.title)}</span>
+        <span class="badge" style="${selected ? "border-color: rgba(94,234,212,.35); background: rgba(94,234,212,.10);" : ""}">
+          ${selected ? "Selected" : labelType(item.type)}
+        </span>
+      </div>
+
+      <div class="meta">${labelCat(item.category)} • ${escapeHtml(item.location)}${durationLine} • ${formatTimeAgo(item.postedAt)}</div>
+
+      <div class="value">$${Number(item.value).toFixed(0)} <span class="muted" style="font-size:12px;font-weight:800;">estimated value</span></div>
+
+      <div class="badges">
+        <div class="badge">Wants: ${escapeHtml(item.want)}</div>
+      </div>
+
+      <div class="meta" style="margin-top:10px;">
+        ${escapeHtml(item.details)}
+      </div>
+    `;
+
+    card.addEventListener("click", () => selectListing(item.id));
+    listingsGrid.appendChild(card);
+  });
+}
+
+function selectListing(id) {
+  selectedListingId = id;
+
+  const listing = allListings().find(x => x.id === id);
+  if (!listing) return;
+
+  const durationLine = (listing.type === "house" && listing.duration) ? ` • Duration: ${escapeHtml(listing.duration)}` : "";
+
+  offerTarget.innerHTML = `
+    <div class="offer-title">${escapeHtml(listing.title)}</div>
+    <div class="offer-meta muted">
+      Type: ${labelType(listing.type)} • Category: ${labelCat(listing.category)} • Value: $${Number(listing.value).toFixed(0)}${durationLine}<br/>
+      Wants: ${escapeHtml(listing.want)}
+    </div>
+  `;
+
+  sendOfferBtn.disabled = false;
+  clearOfferBtn.disabled = false;
+  offerResult.innerHTML = `<strong>Status:</strong> Enter your offer and value estimate, then send.`;
+  renderListings();
+}
+
+function resetOffer() {
+  offerInput.value = "";
+  offerValueInput.value = "";
+  offerResult.innerHTML = `<strong>Status:</strong> Select a listing to compare value and send an offer.`;
+  sendOfferBtn.disabled = !selectedListingId;
+  clearOfferBtn.disabled = !selectedListingId;
+}
+
+sendOfferBtn.addEventListener("click", () => {
+  const listing = allListings().find(x => x.id === selectedListingId);
+  if (!listing) return;
+
+  const offerText = offerInput.value.trim();
+  const val = Number(offerValueInput.value);
+
+  if (!offerText || !val || val <= 0) {
+    offerResult.innerHTML = `<strong>Status:</strong> Please enter an offer description and value estimate.`;
+    return;
+  }
+
+  const accepted = val >= Number(listing.value);
+  const diff = val - Number(listing.value);
+
+  if (accepted) {
+    offerResult.innerHTML = `<strong>Accepted (demo):</strong> Your offer meets the equal-or-greater value rule (+$${diff.toFixed(0)}).`;
+  } else {
+    offerResult.innerHTML = `<strong>Not enough value (demo):</strong> Add $${Math.abs(diff).toFixed(0)} more value (bundle items or more service hours).`;
+  }
+});
+
+clearOfferBtn.addEventListener("click", resetOffer);
+
+function onTypeChange() {
+  const t = getListingType();
+  if (t === "house") {
+    durationWrap.classList.remove("hidden");
+  } else {
+    durationWrap.classList.add("hidden");
+    durationCustom.classList.add("hidden");
+  }
+}
+
+document.querySelectorAll('input[name="listingType"]').forEach(r =>
+  r.addEventListener("change", onTypeChange)
+);
+
+durationInput.addEventListener("change", () => {
+  if (durationInput.value === "Custom") durationCustom.classList.remove("hidden");
+  else durationCustom.classList.add("hidden");
+});
+
+postBtn.addEventListener("click", () => {
+  const t = getListingType();
+  const title = titleInput.value.trim();
+  const category = categoryInput.value;
+  const value = Number(valueInput.value);
+  const want = wantInput.value.trim();
+  const details = detailsInput.value.trim();
+
+  if (!title || !want || !details || !value || value <= 0) {
+    postStatus.textContent = "Please fill in title, category, value, what you want, and details.";
+    return;
+  }
+
+  let duration = null;
+  if (t === "house") {
+    duration = durationInput.value === "Custom" ? durationCustom.value.trim() : durationInput.value;
+    if (!duration) {
+      postStatus.textContent = "Please set a house swap duration.";
+      return;
+    }
+  }
+
+  if (t === "platonic") {
+    // enforce a safety reminder in the listing details
+    if (!details.toLowerCase().includes("platonic")) {
+      postStatus.textContent = "For Companionship listings, include the word 'platonic' in details.";
+      return;
+    }
+  }
+
+  const newItem = {
+    id: nowId(),
+    type: t,
+    category,
+    title,
+    value: Math.floor(value),
+    want,
+    details,
+    duration,
+    location: "Local",
+    postedAt: Date.now()
+  };
+
+  const userList = loadUserListings();
+  userList.unshift(newItem);
+  saveUserListings(userList);
+
+  postStatus.textContent = "Posted! Scroll to Marketplace to see it.";
+  titleInput.value = "";
+  valueInput.value = "";
+  wantInput.value = "";
+  detailsInput.value = "";
+  if (t === "house") {
+    durationInput.value = "1 week";
+    durationCustom.value = "";
+    durationCustom.classList.add("hidden");
+  }
+
+  renderListings();
+});
+
+resetBtn.addEventListener("click", () => {
+  titleInput.value = "";
+  valueInput.value = "";
+  wantInput.value = "";
+  detailsInput.value = "";
+  durationInput.value = "1 week";
+  durationCustom.value = "";
+  durationCustom.classList.add("hidden");
+  postStatus.textContent = "Reset. Fill in your listing details.";
+});
+
+calcBtn.addEventListener("click", () => {
+  const t = Number(targetValue.value);
+  const o = Number(offerValue.value);
+  if (!t || !o || t <= 0 || o <= 0) {
+    calcResult.innerHTML = `<strong>Result:</strong> Please enter positive numbers for both values.`;
+    return;
+  }
+  const diff = o - t;
+  if (diff >= 0) {
+    calcResult.innerHTML = `<strong>Match:</strong> Your offer meets the equal-or-greater value rule (+$${diff.toFixed(0)}).`;
+  } else {
+    calcResult.innerHTML = `<strong>Short:</strong> Add $${Math.abs(diff).toFixed(0)} more value to match.`;
+  }
+});
+
+fillExampleBtn.addEventListener("click", () => {
+  targetValue.value = 120;
+  offerValue.value = 150;
+  calcResult.innerHTML = `<strong>Result:</strong> Example filled. Click “Check match”.`;
+});
+
+bundleBtn.addEventListener("click", () => {
+  const hours = Number(hoursInput.value) || 0;
+  const rate = Number(rateInput.value) || 0;
+  const itemVal = Number(itemAddInput.value) || 0;
+
+  const bundle = (hours * rate) + itemVal;
+  lastBundleValue = bundle;
+
+  bundleResult.innerHTML = `<strong>Bundle value:</strong> $${bundle.toFixed(0)} (hours: ${hours} × $${rate} + items: $${itemVal})`;
+  bundleToOfferBtn.disabled = !(bundle > 0);
+});
+
+bundleToOfferBtn.addEventListener("click", () => {
+  if (!selectedListingId) {
+    bundleResult.innerHTML = `<strong>Tip:</strong> Select a listing in Marketplace first, then apply bundle value.`;
+    return;
+  }
+  offerValueInput.value = String(Math.floor(lastBundleValue || 0));
+  offerInput.value = offerInput.value || "Bundle offer (service hours + item value)";
+  offerResult.innerHTML = `<strong>Status:</strong> Bundle value applied to your offer. Click “Send offer”.`;
+});
+
+[typeFilter, categoryFilter, sortFilter].forEach(el => el.addEventListener("change", renderListings));
+searchInput.addEventListener("input", renderListings);
+
+// initial
+onTypeChange();
+renderListings();

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Barter Exchange — Trade services & items</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">BX</div>
+        <div class="brand-text">
+          <div class="brand-name">Barter Exchange</div>
+          <div class="brand-tag">Trade services & items — no cash required</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="#how">How it works</a>
+        <a href="#market">Marketplace</a>
+        <a href="#post">Post a listing</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <h1>Barter skills and items with people nearby.</h1>
+          <p class="subhead">
+            Offer services like mowing lawns, TV installation, painting, roof cleaning, moving help,
+            tutoring, and more — or trade items of equal or greater value. Make offers, negotiate,
+            and complete the exchange.
+          </p>
+
+          <div class="cta-row">
+            <a class="btn primary" href="#post">Post a listing</a>
+            <a class="btn ghost" href="#market">Browse trades</a>
+          </div>
+
+          <div class="creator">
+            Created by <strong>Parth Pankaj Bakhda</strong>
+          </div>
+
+          <div class="trust">
+            <div class="pill">✅ Services barter</div>
+            <div class="pill">✅ Items trading</div>
+            <div class="pill">✅ Value matching</div>
+            <div class="pill">✅ Offer + negotiate</div>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div class="card-title">Popular trade categories</div>
+          <ul class="checklist">
+            <li>Home services (mowing, painting, cleaning, roof)</li>
+            <li>Handyman (TV mount, furniture assembly)</li>
+            <li>Moving help & delivery</li>
+            <li>Tech help (setup Wi-Fi, fix laptop)</li>
+            <li>Items: electronics, furniture, tools, collectibles</li>
+          </ul>
+          <div class="note">
+            <strong>Note:</strong> This is a front-end demo. In production you’d add accounts, messaging,
+            location radius, and fraud/safety checks.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>How it works</h2>
+          <p>Simple steps to trade services or items.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h3>Create a listing</h3>
+              <p>Offer a service or an item. Set what you want in exchange.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h3>Match by value</h3>
+              <p>Trade items of equal or greater value, or swap service hours.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h3>Send an offer</h3>
+              <p>Offer an item, service hours, or a bundle that meets the value.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h3>Complete safely</h3>
+              <p>Meet in a safe location or confirm the service completion.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="market" class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Marketplace</h2>
+          <p>Browse demo listings and filter by type and category.</p>
+        </div>
+
+        <div class="market-toolbar">
+          <div class="filters">
+            <label class="select">
+              Type:
+              <select id="typeFilter">
+                <option value="all">All</option>
+                <option value="service">Services</option>
+                <option value="item">Items</option>
+              </select>
+            </label>
+
+            <label class="select">
+              Category:
+              <select id="categoryFilter">
+                <option value="all">All categories</option>
+                <option value="home">Home Services</option>
+                <option value="handyman">Handyman</option>
+                <option value="moving">Moving Help</option>
+                <option value="tech">Tech Help</option>
+                <option value="items">Items</option>
+              </select>
+            </label>
+
+            <label class="select">
+              Sort:
+              <select id="sortFilter">
+                <option value="newest">Newest</option>
+                <option value="valueHigh">Value (high → low)</option>
+                <option value="valueLow">Value (low → high)</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="search">
+            <input id="searchInput" placeholder="Search listings (e.g., mowing, TV install, roof, iPhone)"/>
+          </div>
+        </div>
+
+        <div id="listingsGrid" class="results-grid">
+          <!-- JS renders cards here -->
+        </div>
+
+        <div class="callout">
+          <strong>Tip:</strong> In the real app, users would message, negotiate, and confirm the trade securely.
+        </div>
+      </div>
+    </section>
+
+    <section id="post" class="section section-alt">
+      <div class="container">
+        <div class="section-head">
+          <h2>Post a listing</h2>
+          <p>Create a demo listing (saved locally in your browser).</p>
+        </div>
+
+        <div class="workspace">
+          <div class="panel">
+            <div class="panel-title">Listing details</div>
+
+            <div class="form">
+              <label class="label">Listing type</label>
+              <div class="radio-row">
+                <label class="radio">
+                  <input type="radio" name="listingType" value="service" checked />
+                  <span>Service</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="listingType" value="item" />
+                  <span>Item</span>
+                </label>
+              </div>
+
+              <label class="label">Title</label>
+              <input id="titleInput" placeholder="Example: Lawn mowing for 1 hour" />
+
+              <label class="label">Category</label>
+              <select id="categoryInput">
+                <option value="home">Home Services</option>
+                <option value="handyman">Handyman</option>
+                <option value="moving">Moving Help</option>
+                <option value="tech">Tech Help</option>
+                <option value="items">Items</option>
+              </select>
+
+              <label class="label">Estimated value (USD)</label>
+              <input id="valueInput" type="number" min="1" step="1" placeholder="Example: 50" />
+
+              <label class="label">What do you want in exchange?</label>
+              <input id="wantInput" placeholder="Example: TV mount help, tools, electronics, equal value item" />
+
+              <label class="label">Details</label>
+              <textarea id="detailsInput" rows="5" placeholder="Describe the work/item, condition, time needed, and trade preferences."></textarea>
+
+              <div class="control-row">
+                <button id="postBtn" class="btn primary">Post listing</button>
+                <button id="resetBtn" class="btn">Reset</button>
+              </div>
+
+              <div class="tiny" id="postStatus">Your listing will appear in Marketplace above.</div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">Make an offer (demo)</div>
+            <div class="offer-box">
+              <div class="tiny muted">
+                Select any listing in the marketplace to “make an offer”.
+              </div>
+
+              <div class="offer-target" id="offerTarget">
+                <div class="offer-title muted">No listing selected</div>
+                <div class="offer-meta muted">—</div>
+              </div>
+
+              <div class="divider"></div>
+
+              <label class="label">Your offer</label>
+              <input id="offerInput" placeholder="Example: I’ll trade 2 hours painting + $120 tool set" />
+
+              <label class="label">Offer value estimate (USD)</label>
+              <input id="offerValueInput" type="number" min="1" step="1" placeholder="Example: 150" />
+
+              <div class="control-row">
+                <button id="sendOfferBtn" class="btn primary" disabled>Send offer</button>
+                <button id="clearOfferBtn" class="btn" disabled>Clear</button>
+              </div>
+
+              <div class="callout" id="offerResult">
+                <strong>Status:</strong> Select a listing to compare value and send an offer.
+              </div>
+            </div>
+
+            <div class="fineprint">
+              Demo logic: offers are “accepted” when offer value is equal or higher than listing value.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>FAQ</h2>
+          <p>Common questions about bartering and safety.</p>
+        </div>
+
+        <div class="faq">
+          <details>
+            <summary>What can I barter?</summary>
+            <p>Anything legal: services (mowing, cleaning, painting, handyman), and items (tools, furniture, electronics, etc.).</p>
+          </details>
+          <details>
+            <summary>How do you decide “equal value”?</summary>
+            <p>Users estimate value. A real app could use price suggestions, receipts, and community ratings to improve fairness.</p>
+          </details>
+          <details>
+            <summary>How do I stay safe?</summary>
+            <p>Meet in public places, verify profiles, use in-app messaging, and consider identity verification for high-value trades.</p>
+          </details>
+          <details>
+            <summary>Can I barter service hours?</summary>
+            <p>Yes. You can list service hours or bundle services + items to meet the value.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div>
+          <div class="footer-brand">Barter Exchange</div>
+          <div class="footer-sub">Created by Parth Pankaj Bakhda</div>
+        </div>
+        <div class="footer-links">
+          <a href="#how">How it works</a>
+          <a href="#market">Marketplace</a>
+          <a href="#post">Post</a>
+          <a href="#faq">FAQ</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
